@@ -1,0 +1,34 @@
+drop table if exists SalesReport;
+create table SalesReport
+(
+Row_ID integer ,
+Order_ID Varchar(225),
+Order_Date Date,
+Ship_Date Date,
+Ship_Mode  Varchar(225),
+Customer_ID Varchar(225),
+Customer_Name Varchar(225),
+Segment Varchar(225),
+Country Varchar(225),
+City Varchar(225),
+State Varchar(225),
+Region Varchar(225),
+Product_ID Varchar(225),
+Category Varchar(225),
+Sub_Category Varchar(225),
+Product_Name Varchar(225),
+Sale float,
+Quantity integer,
+Profit float,
+Returns Integer,
+Payment_Mode Varchar(225) 
+);
+
+select * from SalesReport
+
+COPY SalesReport(Row_ID,Order_ID,Order_Date,Ship_Date,Ship_Mode,Customer_ID,Customer_Name,
+	         Segment,Country,City,State,Region,Product_ID,Category,Sub_Category,Product_Name,
+					  Sale,Quantity,Profit,Returns,Payment_Mode)				  
+FROM 'C:\Users\NIKHIL PALIWAL\OneDrive\Desktop\Super_Store_SQL\Annual_sales_report.csv'
+DELIMITER ','
+CSV HEADER;

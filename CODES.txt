@@ -1,0 +1,142 @@
+select * from salesreport
+limit 5
+-- To check the data set is imported properly.
+
+-- Q) What is total Sales and profit each year
+SELECT DATE_PART('Year',order_date) as year,
+Round(SUM(sale),0)  as total_sales,
+Round(SUM(profit),0) as total_profit
+from salesreport
+GROUP BY year
+order by year;
+--A ) As we can see there was increase in sales and profit from 2019 to 2020.
+
+-- Q ) what are the total profit and sales per quater
+select Date_part('year',order_date) as year,
+case 
+	when Date_part('month',order_date) IN (1,2,3) then 'Q1'
+	when Date_part('month',order_date) IN (4,5,6) then 'Q2'
+	when Date_part('month',order_date) IN (7,8,9) then 'Q3'
+	Else 'Q4'
+END As quater , 
+Round(Sum(sale),0) as total_sales,
+Round(Sum(profit),0) as total_profit
+from salesreport
+Group By year, quater
+Order By year,quater;
+-- A) In Year 2019 the highest sale was recorded in quater Q4
+	  In Year 2020 as the highest sale was recoreded in Q4.
+	  October to december we are reporting higher sales.
+
+-- Q) Let us check which is the highest quater for sales and profit.
+select * from
+(select *,
+rank() over(partition by year order by total_sales Desc) as rank
+from
+(select Date_part('year',order_date) as year,
+case 
+	when Date_part('month',order_date) IN (1,2,3) then 'Q1'
+	when Date_part('month',order_date) IN (4,5,6) then 'Q2'
+	when Date_part('month',order_date) IN (7,8,9) then 'Q3'
+	Else 'Q4'
+END As quater , 
+Round(Sum(sale),0) as total_sales,
+Round(Sum(profit),0) as total_profit
+from salesreport
+Group By year, quater
+Order By year, quater))
+where rank = 1;
+-- A) From this we can say Q4 that is quater 4  is more profitable in both years.
+
+-- Q) which region generates highest sales and profit
+select region,
+sum(sale) as total_sales,
+sum(profit) as total_profit 
+from salesreport
+group by region
+order by total_sales desc , total_profit desc ;
+-- A) west and east are more have good sales and profit
+
+-- Q) which region generates the highest profit margin
+select region , round((sum(profit) / sum(sale))*100,2) as profit_margin
+from salesreport
+group by region
+order by profit_margin Desc
+-- A) West and East region good profit margin
+
+-- Q) Which states and city builds highest sales and profit
+Select state , 
+round(sum(sale),0) as total_sales, 
+round(sum(profit),0) as total_profit,
+Round((sum(profit)/sum(sale))*100,2) as profit_margin
+from salesreport
+group by state
+order by total_profit Desc
+limit 10;
+-- A) California and Newyork markets accounts  highest sales and profit.
+
+--Q ) Top 10 bottom states
+Select state , 
+sum(sale) as total_sales, 
+sum(profit) as total_profit,
+Round((sum(profit)/sum(sale))*100,2) as profit_margin
+from salesreport
+group by state
+order by total_profit 
+limit 10;
+-- A) Least profitable market are texas, Illinois , Ohio.
+
+-- ) Top 10 Cities
+Select city , 
+sum(sale) as total_sales, 
+sum(profit) as total_profit,
+Round((sum(profit)/sum(sale))*100,2) as profit_margin
+from salesreport
+group by city
+order by total_profit Desc
+limit 10;
+-- A) Top 3 cities we should focus on are New York , los Angeles , Seattle because we are getting maximum profits.
+
+-- Q) which category generates high sales
+select category , round(sum(sale),0) as total_sales
+from salesreport
+group by category
+order by total_sales desc
+-- A) office supplies has high sales
+
+-- Q) which segment makes highest sale
+select segment , sum(sale) as total_Sales
+from salesreport
+group by segment 
+order by total_Sales Desc
+
+-- Q) how many customer id in total we have unique as per region and state
+
+select region,count(distinct customer_id) as total_customer
+from salesreport
+group by region
+order by total_customer Desc
+
+-- Now let us check unique customer for states
+
+select state,count(distinct customer_id) as total_customer
+from salesreport
+group by state
+order by total_customer Desc
+
+-- Q) now let us check which payment mode generated highest sales.
+select payment_mode,
+round(sum(sale),0) as Total_Sales
+from salesreport
+group by payment_mode
+order by Total_Sales Desc
+-- A) Payment mode COD has generated highest sales.
+
+--Q)  Avg shipping time in days
+select Round(Avg(ship_date - order_date ),0) as avg_shipping_time
+from salesreport
+--A ) Average Shipping time is 4 days per order.
+
+
+
+
