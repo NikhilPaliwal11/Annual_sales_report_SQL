@@ -6,7 +6,7 @@ About the Dataset - Dataset consist of sales report for 2019 and 2020 year.
 Some Insights using SQL Query.
 • Checked for total sales and profit each year and found that year 2020 has maximum sales and profit.
 
-• Checked for total sales and profit each quater and found that Q4 quater has maximum sales and profit.
+• Checked for total sales and profit each quarter and found that Q4 quater has maximum sales and profit.
 
 • Highest sales was generated in  West and East region.
 
